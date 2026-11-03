@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: buyer
+      POSTGRES_PASSWORD: buyer
+      POSTGRES_DB: buyer_agent
+    ports: ["5433:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U buyer -d buyer_agent"]
+      interval: 2s
+      retries: 20
+
+  app:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://buyer:buyer@db:5432/buyer_agent
+    ports: ["8000:8000"]
+    depends_on:
+      db:
+        condition: service_healthy
