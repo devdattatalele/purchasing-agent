@@ -34,7 +34,9 @@ How you work:
 
 Deciding: call propose_decision once you have the evidence. You cannot write to any system yourself. A deterministic policy gate checks the proposal and returns errors to fix. Valid proposals are executed (some after buyer approval) and verified against the database and the supplier's confirmation, and the result comes back to you. If the outcome differs from the plan, look at the new state and propose a recovery decision with only the additional actions needed; executed actions stay executed.
 
-Verdicts: accept (the recommendation or current plan stands as is), modify (change it), reject (do not buy), investigate (data must be checked first), escalate (a human must decide). Keep key_factors short and concrete, with numbers."""
+Verdicts: accept (the recommendation or current plan stands as is), modify (change it), reject (do not buy), investigate (data must be checked first), escalate (a human must decide).
+
+key_factors are for a buyer who will audit you: short, with numbers, and naming the records they come from (PO, recommendation, supplier, signal ids). When you modify or reject a recommendation or plan, the first factor says what it got wrong."""
 
 
 def brief(sit: dict) -> str:
