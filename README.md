@@ -4,6 +4,24 @@ An agent that takes a purchasing situation (a replenishment recommendation, a su
 
 The model reasons. Code decides what is allowed, does the writing, and checks the result.
 
+## Results
+
+Twelve scenarios covering all four in the brief, each graded on the final database state against an answer key worked out by hand. Model `gemini/gemini-3.5-flash` through litellm, one run per scenario, a simulated buyer approving anything sent for approval.
+
+| | decision | evidence | constraints | action | validated | recovery | all six |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **Agent** | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | **12/12** |
+| Naive baseline (blind execution) | 4/12 | 0/12 | 6/12 | 3/12 | 0/12 | n/a | 0/12 |
+
+Two runs put the feedback loop under real load:
+
+- **`s2_recovery_stale_quote`**: the replacement supplier's portal quoted 1000 units, it confirmed 72 of the 228 ordered. The verifier caught it, the agent closed that PO short at 72 and ordered the remaining 156 from a third supplier, and the gate sent that order to a buyer because of its 17.5 percent price premium.
+- **`s4_budget_race`**: another buyer spent the budget between the agent's check and its write. The Postgres trigger refused the PO, the refusal came back to the agent as an observation, and it escalated rather than look for a way around the budget.
+
+The eval also caught two of my bugs on the way, which is what it is for: the verifier disagreed with the policy gate about investigations (now one shared rule, with a regression test that fails on the old code), and the grader checked MOQ on a PO the supplier had short confirmed instead of on what the agent ordered. Full scorecards: [agent](eval/results/latest.md), [baseline](eval/results/naive.md). The full suite takes about 9 minutes and 520k tokens.
+
+One run per scenario is a small sample for a stochastic system; `--repeat N` reports pass rates over repeated runs.
+
 ## Run it
 
 You need an LLM key for any provider [litellm](https://docs.litellm.ai/docs/providers) supports. Claude is the default.
@@ -137,7 +155,7 @@ The grader (`evaluate.py`) runs a scenario end to end, with a simulated buyer ap
 | validated | Did it validate the result? | At least one verification ran and the run ended in a terminal state. |
 | recovery | What happens when the first action fails? | If any verification found a deviation, the run must end either verified or escalated. |
 
-**Checking the grader itself.** The same grader runs on a naive baseline that executes the upstream instruction blindly (buy the recommendation, reorder a shortfall from the same supplier, keep the plan on a demand change). It scores 0/12, and its failures are the right ones: the 800 cola order is refused by the budget trigger, the 800 shampoo order breaks case pack on a stock record nobody trusted, the 240 yogurt order would expire. Where blind execution happens to be correct (`s1_accept_recommendation`, `s3_spike_promo_ended`) the grader gives credit on decision and action and fails only evidence and verification. A grader that failed everything would prove nothing.
+**Checking the grader itself.** The same grader runs on a naive baseline that executes the upstream instruction blindly (buy the recommendation, reorder a shortfall from the same supplier, keep the plan on a demand change). It scores 0/12, and its failures are the right ones: the 800 cola order is refused by the budget trigger, the 800 shampoo order breaks case pack on a stock record nobody trusted, reordering a shortfall from the supplier that just ran out breaks its case pack, the 240 yogurt order would expire. Where blind execution happens to land on the right outcome (`s1_accept_recommendation`, `s3_spike_promo_ended`, and `s4_budget_race`, where the trigger stops the blind order) the grader gives credit on decision, constraints and action, and fails only evidence and verification. A grader that failed everything would prove nothing.
 
 **Repeatability.** LLM runs vary. `--repeat N` runs each scenario N times and the scorecard reports per check pass rates, which is a better signal than one lucky run.
 
@@ -147,8 +165,60 @@ Latest results: [`eval/results/latest.md`](eval/results/latest.md) (agent) and [
 
 - One SKU per PO, flat daily forecast, one world per scenario. Real POs have many lines and forecasts have shape.
 - The supplier is in process. It sits behind the same two calls (`quote`, `submit`) it would have over HTTP, and those are exposed at `/supplier/{id}/quote` and `/supplier/orders/{po_id}/submit`.
-- Runs execute in a background thread in the API process. A queue worker (or a durable workflow engine) would replace it in production; the persisted state in `agent_runs.state` is what makes that swap cheap.
+- Runs execute in a background thread in the API process. That is the first thing the production path below replaces.
 - No auth. The approval endpoint would sit behind the buyer's identity, and that identity would go on the approval row.
+
+## Production path: Temporal and Kubernetes (planned, not in this repo)
+
+This repo is the decision core. Running it against real stores needs durability and isolation that a thread in an API process does not give. The plan below is the next step; none of it is built here. It is the same shape as [Plnt](https://github.com/plnt-work/plnt), where workflows run as a Temporal saga on Kubernetes.
+
+### Why Temporal fits this agent
+
+The code is already split the way Temporal wants it. Everything nondeterministic or side effecting is a separate call (model turns, tool reads, executor writes, supplier submits), and everything that decides is plain code (the loop, the gate, the approval rule, the recovery budget). Moving to Temporal turns `agent.loop` into workflow code and wraps the other modules as activities. `tools.py`, `policy.py`, `actions.py` and `supplier.py` do not change.
+
+| Today | With Temporal |
+| --- | --- |
+| `agent.run` in a daemon thread | `PurchasingDecisionWorkflow`, workflow id = situation id, so one situation can never run twice at once |
+| `llm()` call with `num_retries=2` | `llm_turn` activity with a retry policy and timeouts; a provider outage pauses the run instead of failing it |
+| Tool calls | `read_tool` activity, idempotent, retried freely |
+| `execute` | One activity per action, idempotency key `run_id:action_index`, so a retry never places a second PO |
+| `supplier.submit` returns at once | Supplier confirmation arrives later as a signal (`supplier_confirmed`), which is how real suppliers answer |
+| Approval row plus polling | Workflow waits on a `buyer_decision` signal with a timer; no answer in N hours escalates on its own |
+| "Executed actions stay executed, re-plan forward" | Explicit saga compensations per action type (cancel the PO, reverse the transfer) when a plan has to unwind |
+| Nothing happens after the run ends | Durable timers: re-check on the PO's ETA that it actually arrived, and in `s4_budget_cap` place the deferred order on the day the budget resets |
+| `agent_runs.state` jsonb | Workflow history; `agent_steps` stays as the buyer facing audit log |
+
+### Target deployment
+
+```mermaid
+flowchart LR
+    subgraph K8s[Kubernetes cluster]
+        ING[Ingress] --> API[api Deployment<br/>FastAPI + built UI]
+        API -- start workflow, send signals --> TS[(Temporal<br/>Cloud or Helm chart)]
+        TS --> W[agent-worker Deployment<br/>workflows + activities<br/>scaled on task queue backlog]
+        W --> LLM[LLM provider via litellm]
+        W --> SUPA[supplier-gateway Deployment<br/>real EDI or API adapters]
+        W --> PG[(Postgres<br/>managed or CloudNativePG)]
+        API --> PG
+        CRON[CronJob<br/>nightly eval on fixtures] --> W
+    end
+    SEC[External Secrets<br/>LLM keys, DB creds] -.-> W
+    SEC -.-> API
+    OTEL[OpenTelemetry + Prometheus] -.-> W
+```
+
+- **Workloads.** `api` (stateless, scaled on HPA), `agent-worker` (scaled on Temporal task queue backlog through KEDA), `supplier-gateway` as its own service so the supplier is a real network boundary with its own retries and rate limits. Packaged as one Helm chart with a values file per environment.
+- **State.** Postgres stays the system of record, and the budget trigger keeps working unchanged because it lives in the database, not in the worker. Temporal holds run state.
+- **Secrets and config.** LLM keys and DB credentials from External Secrets, never in images. `AUTO_APPROVE_LIMIT`, the price premium limit and the run budgets in a ConfigMap, so finance can tune them without a deploy.
+- **Observability.** One trace per run (the `agent_steps` already map to spans). Metrics worth alerting on: gate rejection rate, deviation rate, approval wait time, escalation rate, tokens per decision, and supplier short confirmation rate by supplier.
+- **Eval as a release gate.** The scenario eval runs in CI on every prompt, model or policy change and nightly as a CronJob. A drop in per check pass rate blocks the rollout, the same way a failing test does. New production incidents become new fixtures.
+
+### Order of work
+
+1. Temporal workflow and activities around the existing modules, with the supplier confirmation and buyer decision as signals.
+2. Helm chart, worker autoscaling, secrets, traces.
+3. Real integrations: ERP stock and PO sync, supplier adapters, buyer identity on approvals, multi line POs.
+4. Shadow mode: the agent decides on live situations but only records; its decisions are compared with what buyers actually did before it is allowed to act.
 
 ## Other buyer problems the same design covers
 
