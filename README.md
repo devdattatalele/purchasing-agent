@@ -10,8 +10,12 @@ Twelve scenarios covering all four in the brief, each graded on the final databa
 
 | | decision | evidence | constraints | action | validated | recovery | all six |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| **Agent** | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | **12/12** |
+| **Agent** | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 | 2/2 | **12/12** |
 | Naive baseline (blind execution) | 4/12 | 0/12 | 6/12 | 3/12 | 0/12 | n/a | 0/12 |
+
+Recovery only applies to runs where something went wrong after execution: two of the agent's runs, none of the baseline's, which never verifies anything.
+
+![Eval tab: agent passes 12 of 12 scenarios on every check, naive baseline passes none](docs/eval.png)
 
 Two runs put the feedback loop under real load:
 
@@ -153,7 +157,7 @@ The grader (`evaluate.py`) runs a scenario end to end, with a simulated buyer ap
 | constraints | Did it respect the constraints? | Budget lines not overrun, storage peak within capacity at the true demand, every agent PO on MOQ and case pack, no expected expiry, spend cap where set. |
 | action | Did it take the right action? | Required action types taken, forbidden ones not, suppliers and quantities inside the band, final cover at the scenario's true demand between the minimum and the overstock cap, approval asked exactly when it should be, key facts mentioned. |
 | validated | Did it validate the result? | At least one verification ran and the run ended in a terminal state. |
-| recovery | What happens when the first action fails? | If any verification found a deviation, the run must end either verified or escalated. |
+| recovery | What happens when the first action fails? | If any verification found a deviation, the run must end either verified or escalated. Runs with no deviation are n/a, not a pass. |
 
 **Checking the grader itself.** The same grader runs on a naive baseline that executes the upstream instruction blindly (buy the recommendation, reorder a shortfall from the same supplier, keep the plan on a demand change). It scores 0/12, and its failures are the right ones: the 800 cola order is refused by the budget trigger, the 800 shampoo order breaks case pack on a stock record nobody trusted, reordering a shortfall from the supplier that just ran out breaks its case pack, the 240 yogurt order would expire. Where blind execution happens to land on the right outcome (`s1_accept_recommendation`, `s3_spike_promo_ended`, and `s4_budget_race`, where the trigger stops the blind order) the grader gives credit on decision, constraints and action, and fails only evidence and verification. A grader that failed everything would prove nothing.
 
