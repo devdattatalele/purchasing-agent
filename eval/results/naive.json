@@ -6,6 +6,7 @@
       "title": "S1: recommendation is right",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,
@@ -44,6 +45,7 @@
       "title": "S1: stock record looks wrong",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,
@@ -59,7 +61,7 @@
         },
         "constraints": {
           "pass": false,
-          "detail": "PO-5001 breaks MOQ/case pack"
+          "detail": "ordered 800 from SUP-ANDINA, breaks MOQ 120/case 12"
         },
         "action": {
           "pass": false,
@@ -82,6 +84,7 @@
       "title": "S1: recommendation ignores an open PO",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,
@@ -120,6 +123,7 @@
       "title": "S1: recommendation would overstock",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,
@@ -135,7 +139,7 @@
         },
         "constraints": {
           "pass": false,
-          "detail": "storage peak 1345 > 700; PO-5001 breaks MOQ/case pack"
+          "detail": "storage peak 1345 > 700; ordered 800 from SUP-ANDINA, breaks MOQ 48/case 12"
         },
         "action": {
           "pass": false,
@@ -158,6 +162,7 @@
       "title": "S2: replacement supplier under-delivers too",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,
@@ -172,8 +177,8 @@
           "detail": "missing get_item_snapshot, get_network_stock, get_open_purchase_orders, get_supplier_options"
         },
         "constraints": {
-          "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "pass": false,
+          "detail": "ordered 280 from SUP-ANDINA, breaks MOQ 120/case 12"
         },
         "action": {
           "pass": false,
@@ -196,6 +201,7 @@
       "title": "S2: supplier ships 250 of 500, stock is still enough",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,
@@ -210,8 +216,8 @@
           "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders"
         },
         "constraints": {
-          "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "pass": false,
+          "detail": "ordered 250 from SUP-ANDINA, breaks MOQ 120/case 24"
         },
         "action": {
           "pass": false,
@@ -227,13 +233,14 @@
         }
       },
       "pass": false,
-      "seconds": 0.2
+      "seconds": 0.1
     },
     {
       "scenario": "s2_shortfall_transfer",
       "title": "S2: supplier ships 250 of 500, stock exists in the network",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,
@@ -248,8 +255,8 @@
           "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders"
         },
         "constraints": {
-          "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "pass": false,
+          "detail": "ordered 250 from SUP-ANDINA, breaks MOQ 100/case 20"
         },
         "action": {
           "pass": false,
@@ -272,6 +279,7 @@
       "title": "S3: sales running 2.5x forecast during a heat wave",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,
@@ -310,6 +318,7 @@
       "title": "S3: spike was a promotion that ended yesterday",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,
@@ -348,6 +357,7 @@
       "title": "S4: the right quantity does not fit the budget",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,
@@ -386,6 +396,7 @@
       "title": "S4: another buyer spends the budget between check and commit",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,
@@ -417,13 +428,14 @@
         }
       },
       "pass": false,
-      "seconds": 0.1
+      "seconds": 0.2
     },
     {
       "scenario": "s4_moq_perishable",
       "title": "S4: supplier MOQ is bigger than shelf life allows",
       "run_id": 1,
       "status": "completed",
+      "error": null,
       "verdict": "accept",
       "summary": "Executed upstream instruction.",
       "tokens": 0,

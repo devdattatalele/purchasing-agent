@@ -1,0 +1,581 @@
+{
+  "mode": "agent",
+  "results": [
+    {
+      "scenario": "s1_accept_recommendation",
+      "title": "S1: recommendation is right",
+      "run_id": 1,
+      "status": "completed",
+      "error": null,
+      "verdict": "accept",
+      "summary": "Accepted recommendation REC-1101 to purchase 800 units of SNK-CHIPS-150 from SUP-ANDINA. The order arrives on day 3 before stockout and provides 14 days of cover within capacity and budget constraints.",
+      "tokens": 29132,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "accept (want accept/modify)"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took ['create_po']"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "1 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": true,
+      "seconds": 37.1
+    },
+    {
+      "scenario": "s1_investigate_phantom",
+      "title": "S1: stock record looks wrong",
+      "run_id": 1,
+      "status": "completed",
+      "error": null,
+      "verdict": "investigate",
+      "summary": "Investigating recommendation REC-1301. A cycle count is requested for PC-SHAMPOO-400 at DS-CHAPINERO due to a 6-day zero sale streak despite system showing 310 units on hand and 46 days since last count.",
+      "tokens": 16339,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "investigate (want investigate/escalate)"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took ['request_cycle_count']"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "1 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": true,
+      "seconds": 20.9
+    },
+    {
+      "scenario": "s1_modify_open_po",
+      "title": "S1: recommendation ignores an open PO",
+      "run_id": 1,
+      "status": "completed",
+      "error": null,
+      "verdict": "modify",
+      "summary": "Modify recommendation REC-1001: REC-1001 ignored open PO-1001 (400 units) and exceeded budget ($720 vs $700) and capacity limits (1260 vs 1000). Place a PO for 480 units with SUP-NORTE at $0.84/unit ($403.20 total), which lands in time and optimizes unit cost.",
+      "tokens": 42217,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "modify (want modify)"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took ['create_po']"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "1 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": true,
+      "seconds": 47.0
+    },
+    {
+      "scenario": "s1_reject_overstock",
+      "title": "S1: recommendation would overstock",
+      "run_id": 1,
+      "status": "completed",
+      "error": null,
+      "verdict": "reject",
+      "summary": "Reject recommendation REC-1201 to buy 800 units of HOME-DET-1L. On-hand stock of 420 units plus open PO PO-1201 (200 units) provides 41 days of cover, well beyond the 12-day coverage horizon and within storage capacity.",
+      "tokens": 16498,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "reject (want reject)"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took no action"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "1 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": true,
+      "seconds": 20.6
+    },
+    {
+      "scenario": "s2_recovery_stale_quote",
+      "title": "S2: replacement supplier under-delivers too",
+      "run_id": 1,
+      "status": "completed",
+      "error": null,
+      "verdict": "modify",
+      "summary": "Amended PO-5001 to 72 units to reflect SUP-NORTE's actual confirmation and created PO with SUP-COSTA for 156 units to reach the 13-day target stock.",
+      "tokens": 119895,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "modify (want modify/escalate)"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took ['amend_po', 'create_po']"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "2 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "1 deviation(s): SUP-NORTE confirmed only 72 of 228 on PO-5001."
+        }
+      },
+      "pass": true,
+      "seconds": 73.3
+    },
+    {
+      "scenario": "s2_shortfall_sufficient",
+      "title": "S2: supplier ships 250 of 500, stock is still enough",
+      "run_id": 1,
+      "status": "completed",
+      "error": null,
+      "verdict": "modify",
+      "summary": "Amended PO-2101 to 250 units to match SUP-ANDINA's available supply. The reduced order quantity provides 21 days of coverage, exceeding the 10-day coverage horizon.",
+      "tokens": 29583,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "modify (want accept/modify)"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took ['amend_po']"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "1 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": true,
+      "seconds": 31.7
+    },
+    {
+      "scenario": "s2_shortfall_transfer",
+      "title": "S2: supplier ships 250 of 500, stock exists in the network",
+      "run_id": 1,
+      "status": "completed",
+      "error": null,
+      "verdict": "modify",
+      "summary": "Amend PO-2001 to 250 units following SUP-ANDINA's mill shortfall, and transfer 220 units from DS-USAQUEN to cover the target shortfall and maintain 13 days of cover without stockouts.",
+      "tokens": 40423,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "modify (want modify)"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took ['amend_po', 'transfer']"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "1 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": true,
+      "seconds": 47.7
+    },
+    {
+      "scenario": "s3_demand_spike",
+      "title": "S3: sales running 2.5x forecast during a heat wave",
+      "run_id": 1,
+      "status": "completed",
+      "error": null,
+      "verdict": "modify",
+      "summary": "Updated demand basis to 100 units/day to reflect the heat wave advisory through 2026-11-16. Issued a new PO for 624 units with SUP-NORTE at $1.02/unit to maintain 13 days of supply.",
+      "tokens": 63353,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "modify (want modify)"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took ['create_po']"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "1 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": true,
+      "seconds": 59.0
+    },
+    {
+      "scenario": "s3_spike_promo_ended",
+      "title": "S3: spike was a promotion that ended yesterday",
+      "run_id": 1,
+      "status": "completed",
+      "error": null,
+      "verdict": "accept",
+      "summary": "Accept the current purchasing plan. The demand shift was caused by a 2-for-1 promotion that ended yesterday, so demand reverts to 30 units/day. Current stock (300) plus PO-3101 (200, ETA 2026-11-07) gives 16 days of cover.",
+      "tokens": 21437,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "accept (want accept)"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took no action"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "1 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": true,
+      "seconds": 30.5
+    },
+    {
+      "scenario": "s4_budget_cap",
+      "title": "S4: the right quantity does not fit the budget",
+      "run_id": 1,
+      "status": "escalated",
+      "error": null,
+      "verdict": "modify",
+      "summary": "Modified REC-4001 from 360 units to 144 units from SUP-ANDINA ($864 spend) to prevent stockout while remaining within the $900 category budget through the 2026-11-08 budget reset. Escalated the remaining 216 units for buyer approval.",
+      "tokens": 46145,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "modify (want modify/escalate)"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took ['create_po', 'escalate']"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "1 verification(s), run escalated"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": true,
+      "seconds": 56.5
+    },
+    {
+      "scenario": "s4_budget_race",
+      "title": "S4: another buyer spends the budget between check and commit",
+      "run_id": 1,
+      "status": "escalated",
+      "error": null,
+      "verdict": "escalate",
+      "summary": "Escalate to buyer for budget approval. Remaining category budget ($102) is lower than supplier minimum order costs ($216 for SUP-ANDINA, $403.20 for SUP-NORTE). Existing stock plus PO-1001 provides 11 days of cover, 140 units short of the 14-day target.",
+      "tokens": 56679,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "not graded"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took ['escalate']"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "2 verification(s), run escalated"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "1 deviation(s): create_po failed: budget exceeded on DS-CHAPINERO/beverages: committed 958.00, this PO 403.20, budget 1060.00"
+        }
+      },
+      "pass": true,
+      "seconds": 55.4
+    },
+    {
+      "scenario": "s4_moq_perishable",
+      "title": "S4: supplier MOQ is bigger than shelf life allows",
+      "run_id": 1,
+      "status": "completed",
+      "error": null,
+      "verdict": "modify",
+      "summary": "Modify REC-4101 by ordering 72 units from SUP-LACTEOS instead of 240 units from SUP-ANDINA. Buying 240 units causes 144 units to expire unused due to the 8-day shelf life. 72 units covers demand to target level with zero waste.",
+      "tokens": 38813,
+      "tools": [
+        "check_supplier_availability",
+        "get_budget",
+        "get_demand",
+        "get_item_snapshot",
+        "get_network_stock",
+        "get_open_purchase_orders",
+        "get_supplier_options",
+        "project_inventory"
+      ],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "modify (want modify)"
+        },
+        "evidence": {
+          "pass": true,
+          "detail": "8 tools used"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took ['create_po']"
+        },
+        "validated": {
+          "pass": true,
+          "detail": "1 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": true,
+      "seconds": 39.5
+    }
+  ]
+}
