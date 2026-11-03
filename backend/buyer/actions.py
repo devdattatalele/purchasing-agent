@@ -7,7 +7,7 @@ import psycopg
 from buyer import seed, supplier
 from buyer.db import connect, one, today
 from buyer.domain import cover_summary, item_context
-from buyer.policy import budget_line, supplier_item
+from buyer.policy import accepts_gap, budget_line, supplier_item
 
 
 def _next_id(c, prefix: str) -> str:
@@ -118,7 +118,9 @@ def verify(decision: dict, results: list[dict], sit: dict, predicted: dict) -> d
     budget = budget_line(sit["node_id"], sit["sku"])
     if budget and budget["remaining"] < 0:
         deviations.append(f"Budget overrun: remaining {budget['remaining']}.")
-    escalated = any(a.get("type") == "escalate" for a in decision.get("actions") or [])
     covered = got >= item["horizon"]
-    return {"ok": not deviations and (covered or escalated), "deviations": deviations,
-            "covered": covered, "escalated": escalated, "expected": predicted, "actual": actual}
+    human_review = accepts_gap(decision)
+    if not covered and not human_review:
+        deviations.append(f"Store runs out on day {got}, before the coverage horizon (day {item['horizon']}).")
+    return {"ok": not deviations, "deviations": deviations, "covered": covered,
+            "human_review": human_review, "expected": predicted, "actual": actual}

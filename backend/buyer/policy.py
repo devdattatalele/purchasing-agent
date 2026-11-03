@@ -46,6 +46,12 @@ def transferable(node_id: str, sku: str) -> int:
     return int(max(0, min(ctx["on_hand"], supply - need)))
 
 
+def accepts_gap(decision: dict) -> bool:
+    """A coverage gap is acceptable only while a person is being brought in."""
+    return decision.get("verdict") in ("investigate", "escalate") or any(
+        a.get("type") == "escalate" for a in decision.get("actions") or [])
+
+
 def validate(decision: dict, sit: dict, tools_called: set[str]) -> dict:
     node, sku = sit["node_id"], sit["sku"]
     item = item_context(node, sku)
@@ -53,7 +59,6 @@ def validate(decision: dict, sit: dict, tools_called: set[str]) -> dict:
     warnings: list[str] = []
     actions = decision.get("actions") or []
     kinds = {a.get("type") for a in actions}
-    verdict = decision.get("verdict")
 
     needed = set(BASE_EVIDENCE)
     for k in kinds:
@@ -140,8 +145,7 @@ def validate(decision: dict, sit: dict, tools_called: set[str]) -> dict:
     if cover < item["horizon"]:
         msg = (f"Coverage gap: at {demand}/day the plan runs out on day {cover}, before the next order "
                f"could land (day {item['horizon']}). Add supply or escalate.")
-        escalating = "escalate" in kinds or verdict in ("investigate", "escalate")
-        (warnings if escalating else errors).append(msg)
+        (warnings if accepts_gap(decision) else errors).append(msg)
     if extra and item["max_cover_days"] < cover < HORIZON:
         warnings.append(f"Overstock: plan covers {cover} days, above the {item['max_cover_days']} day cap.")
     if extra and plan["expected_waste"]:

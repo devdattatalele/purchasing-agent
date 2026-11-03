@@ -95,7 +95,7 @@ function Step({ step }: { step: any }) {
           {p.deviations?.map((d: string, i: number) => <div key={i} className="bad-text">✕ {d}</div>)}
           <div className="small muted num">
             expected cover to day {p.expected?.stockout_after_first_possible_arrival}, actual {p.actual?.stockout_after_first_possible_arrival} (horizon {p.actual?.horizon_days})
-            {p.escalated ? " · escalated" : ""}
+            {p.human_review ? " · gap accepted, a person is reviewing" : ""}
           </div>
         </>
       );

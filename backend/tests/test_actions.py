@@ -6,9 +6,9 @@ from buyer.policy import validate
 from tests.test_policy import ALL_TOOLS
 
 
-def run(sid, actions, demand):
+def run(sid, actions, demand, verdict="modify"):
     sit = seed.load(sid)["situation"]
-    decision = {"verdict": "modify", "demand_per_day": demand, "actions": actions}
+    decision = {"verdict": verdict, "demand_per_day": demand, "actions": actions}
     report = validate(decision, sit, ALL_TOOLS)
     assert report["ok"], report["errors"]
     results = execute(0, decision, sit)
@@ -44,3 +44,18 @@ def test_transfer_moves_stock_and_closes_gap():
     assert check["ok"], check["deviations"]
     assert one("SELECT status FROM purchase_orders WHERE id = 'PO-2001'")["status"] == "confirmed"
     assert one("SELECT on_hand FROM inventory WHERE node_id = 'DS-USAQUEN'")["on_hand"] == 460
+
+
+def test_investigation_with_a_known_gap_is_not_a_deviation():
+    # The gate accepts this plan (a person is checking the stock first); the
+    # verifier must agree with the gate instead of calling it a failure.
+    _, check = run("s1_investigate_phantom",
+                   [{"type": "request_cycle_count", "reason": "zero sales for 6 days"}], 50, verdict="investigate")
+    assert not check["covered"] and check["human_review"]
+    assert check["ok"], check["deviations"]
+
+
+def test_uncovered_plan_always_names_the_deviation():
+    _, check = run("s2_recovery_stale_quote",
+                   [{"type": "create_po", "supplier_id": "SUP-NORTE", "qty": 228}], 40)
+    assert not check["ok"] and any("coverage horizon" in d for d in check["deviations"])
