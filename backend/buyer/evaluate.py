@@ -50,9 +50,8 @@ def grade(sc: dict, run_id: int) -> dict:
     transfers = rows("SELECT * FROM transfers WHERE run_id = %s", (run_id,))
     tasks = rows("SELECT * FROM tasks WHERE run_id = %s", (run_id,))
     approvals = rows("SELECT * FROM approvals WHERE run_id = %s", (run_id,))
-    executed = [r["action"]["type"] for s in steps if s["kind"] == "action"
-                for r in s["payload"]["results"] if r["ok"]]
-    taken = set(executed) | {"escalate" for t in tasks if t["kind"] == "escalation"}
+    done = [r["action"] for s in steps if s["kind"] == "action" for r in s["payload"]["results"] if r["ok"]]
+    taken = {a["type"] for a in done} | {"escalate" for t in tasks if t["kind"] == "escalation"}
     out = {}
 
     want = exp.get("verdicts")
@@ -71,10 +70,12 @@ def grade(sc: dict, run_id: int) -> dict:
             problems.append(f"budget {b['category']} overrun by {-b['remaining']:.2f}")
     if final["peak_stock"] > item["capacity"]:
         problems.append(f"storage peak {final['peak_stock']} > {item['capacity']}")
-    for p in live:
-        si = one("SELECT moq, case_pack FROM supplier_items WHERE supplier_id = %s AND sku = %s", (p["supplier_id"], sku))
-        if p["qty"] < si["moq"] or p["qty"] % si["case_pack"]:
-            problems.append(f"{p['id']} breaks MOQ/case pack")
+    # MOQ and case pack bind what the agent ordered. A supplier confirming
+    # less, and the agent closing that PO short, is not an ordering breach.
+    for a in (a for a in done if a["type"] == "create_po"):
+        si = one("SELECT moq, case_pack FROM supplier_items WHERE supplier_id = %s AND sku = %s", (a["supplier_id"], sku))
+        if a["qty"] < si["moq"] or a["qty"] % si["case_pack"]:
+            problems.append(f"ordered {a['qty']} from {a['supplier_id']}, breaks MOQ {si['moq']}/case {si['case_pack']}")
     if final["expected_waste"] and (live or transfers):
         problems.append(f"about {final['expected_waste']} units expire")
     spend = sum((p["qty_confirmed"] if p["qty_confirmed"] is not None else p["qty"]) * p["unit_price"] for p in live)
@@ -123,7 +124,7 @@ def grade(sc: dict, run_id: int) -> dict:
         handled = run["status"] == "escalated" or checks[-1]["payload"]["ok"]
         out["recovery"] = verdict(handled, f"{len(deviated)} deviation(s): {deviated[0]['payload']['deviations'][0]}")
 
-    return {"scenario": sc["id"], "title": sc["title"], "run_id": run_id, "status": run["status"],
+    return {"scenario": sc["id"], "title": sc["title"], "run_id": run_id, "status": run["status"], "error": run["error"],
             "verdict": decision.get("verdict"), "summary": decision.get("summary"), "tokens": run["tokens"],
             "tools": sorted(tools), "checks": out, "pass": all(c["pass"] for c in out.values())}
 
@@ -142,7 +143,8 @@ def scorecard(results: list[dict], mode: str) -> str:
         lines.append(f"- {c}: {sum(r['checks'][c]['pass'] for r in results)}/{len(results)}")
     lines += ["", "## Details", ""]
     for r in results:
-        lines.append(f"**{r['scenario']}** ({r['status']}, {r['tokens']} tokens): {r['summary']}")
+        lines.append(f"**{r['scenario']}** ({r['status']}, {r['tokens']} tokens): {r['summary']}"
+                     + (f" Error: {r['error']}" if r.get("error") else ""))
         for c in CHECKS:
             lines.append(f"- {c}: {mark[r['checks'][c]['pass']]}, {r['checks'][c]['detail']}")
         lines.append("")
@@ -159,8 +161,12 @@ def main():
     for sid in args.only or seed.scenario_ids():
         for _ in range(args.repeat):
             t0 = time.time()
-            run_id = run_scenario(sid, args.mode)
-            r = grade(seed.scenario(sid), run_id)
+            try:
+                r = grade(seed.scenario(sid), run_scenario(sid, args.mode))
+            except Exception as e:  # one broken scenario must not hide the other eleven
+                r = {"scenario": sid, "title": seed.scenario(sid)["title"], "run_id": None, "status": "error",
+                     "verdict": None, "summary": f"{type(e).__name__}: {e}", "tokens": 0, "tools": [],
+                     "checks": {c: verdict(False, "eval error") for c in CHECKS}, "pass": False}
             r["seconds"] = round(time.time() - t0, 1)
             results.append(r)
             print(f"{sid:28} {'PASS' if r['pass'] else 'FAIL'}  verdict={r['verdict']}  "
