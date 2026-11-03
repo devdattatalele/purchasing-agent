@@ -1,0 +1,178 @@
+{
+  "id": "s4_budget_race",
+  "title": "S4: another buyer spends the budget between check and commit",
+  "notes": "Same world as s1_modify_open_po plus a water SKU. After the agent validates its cola PO against 700 of remaining budget, a second buyer commits PO-1099 (650 water x 0.92 = 598), leaving 102. The agent's PO now fails the Postgres budget trigger. Expected: the failure comes back as an observation, the agent re-plans (ANDINA's MOQ of 240 costs 216, which no longer fits) and escalates or holds, and the budget is never breached. Supply without a new PO still covers 11 days.",
+  "nodes": [
+    {
+      "id": "DS-CHAPINERO",
+      "name": "Chapinero dark store"
+    }
+  ],
+  "products": [
+    {
+      "sku": "BEV-COLA-15",
+      "name": "Cola 1.5L",
+      "category": "beverages",
+      "unit_cost": 0.9
+    },
+    {
+      "sku": "BEV-WATER-600",
+      "name": "Still water 600ml",
+      "category": "beverages",
+      "unit_cost": 0.92
+    }
+  ],
+  "suppliers": [
+    {
+      "id": "SUP-ANDINA",
+      "name": "Andina Distribuciones",
+      "active": true,
+      "fill_rate": 0.97
+    },
+    {
+      "id": "SUP-NORTE",
+      "name": "Mayorista del Norte",
+      "active": true,
+      "fill_rate": 0.88
+    }
+  ],
+  "supplier_items": [
+    {
+      "supplier_id": "SUP-ANDINA",
+      "sku": "BEV-COLA-15",
+      "unit_price": 0.9,
+      "moq": 240,
+      "case_pack": 24,
+      "lead_time_days": 4,
+      "available_qty": 5000
+    },
+    {
+      "supplier_id": "SUP-NORTE",
+      "sku": "BEV-COLA-15",
+      "unit_price": 0.84,
+      "moq": 480,
+      "case_pack": 24,
+      "lead_time_days": 6,
+      "available_qty": 5000
+    },
+    {
+      "supplier_id": "SUP-ANDINA",
+      "sku": "BEV-WATER-600",
+      "unit_price": 0.92,
+      "moq": 240,
+      "case_pack": 24,
+      "lead_time_days": 4,
+      "available_qty": 5000
+    }
+  ],
+  "inventory": [
+    {
+      "node_id": "DS-CHAPINERO",
+      "sku": "BEV-COLA-15",
+      "on_hand": 300,
+      "capacity": 1000,
+      "last_counted_day": -2
+    },
+    {
+      "node_id": "DS-CHAPINERO",
+      "sku": "BEV-WATER-600",
+      "on_hand": 200,
+      "capacity": 1200,
+      "last_counted_day": -2
+    }
+  ],
+  "forecast": [
+    {
+      "node_id": "DS-CHAPINERO",
+      "sku": "BEV-COLA-15",
+      "units_per_day": 60
+    },
+    {
+      "node_id": "DS-CHAPINERO",
+      "sku": "BEV-WATER-600",
+      "units_per_day": 45
+    }
+  ],
+  "sales": [
+    {
+      "node_id": "DS-CHAPINERO",
+      "sku": "BEV-COLA-15",
+      "base": 60
+    },
+    {
+      "node_id": "DS-CHAPINERO",
+      "sku": "BEV-WATER-600",
+      "base": 45
+    }
+  ],
+  "budgets": [
+    {
+      "node_id": "DS-CHAPINERO",
+      "category": "beverages",
+      "start_day": -2,
+      "end_day": 27,
+      "amount": 1060,
+      "next_amount": 1060
+    }
+  ],
+  "purchase_orders": [
+    {
+      "id": "PO-1001",
+      "node_id": "DS-CHAPINERO",
+      "supplier_id": "SUP-ANDINA",
+      "sku": "BEV-COLA-15",
+      "qty": 400,
+      "qty_confirmed": 400,
+      "unit_price": 0.9,
+      "status": "confirmed",
+      "order_day": -2,
+      "eta_day": 2
+    }
+  ],
+  "recommendations": [
+    {
+      "id": "REC-1001",
+      "node_id": "DS-CHAPINERO",
+      "sku": "BEV-COLA-15",
+      "supplier_id": "SUP-ANDINA",
+      "qty": 800,
+      "source": "replenishment_engine",
+      "reason": "On hand 300 is below the 14 day target of 840. Rounded up with a buffer for weekend demand."
+    }
+  ],
+  "situation": {
+    "id": "SIT-1099",
+    "kind": "recommendation_review",
+    "title": "Review recommendation REC-1001: buy 800 Cola 1.5L",
+    "description": "The replenishment engine recommends buying 800 units of BEV-COLA-15 for DS-CHAPINERO from SUP-ANDINA (REC-1001). Decide whether to accept, modify, reject or investigate it, and act on the decision.",
+    "node_id": "DS-CHAPINERO",
+    "sku": "BEV-COLA-15",
+    "ref_id": "REC-1001"
+  },
+  "expect": {
+    "verdicts": null,
+    "required_tools": [
+      "get_budget",
+      "get_open_purchase_orders"
+    ],
+    "expects_deviation": true,
+    "true_daily_demand": 60,
+    "min_cover_days": 10,
+    "max_cover_days": 30
+  },
+  "inject_before_execute": [
+    {
+      "id": "PO-1099",
+      "node_id": "DS-CHAPINERO",
+      "supplier_id": "SUP-ANDINA",
+      "sku": "BEV-WATER-600",
+      "qty": 650,
+      "qty_confirmed": 650,
+      "unit_price": 0.92,
+      "status": "confirmed",
+      "order_day": 0,
+      "eta_day": 4,
+      "created_by": "buyer:another_buyer"
+    }
+  ]
+}

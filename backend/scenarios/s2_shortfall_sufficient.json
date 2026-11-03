@@ -1,0 +1,47 @@
+{
+  "id": "s2_shortfall_sufficient",
+  "title": "S2: supplier ships 250 of 500, stock is still enough",
+  "notes": "400 on hand + 250 confirmed = 650 units = 21 days at 30/day, well past the 13 day target. Accept the partial fill, close the remainder, buy nothing. Sourcing elsewhere is a false positive.",
+  "nodes": [
+    {"id": "DS-CHAPINERO", "name": "Chapinero dark store"},
+    {"id": "DS-USAQUEN", "name": "Usaquen dark store"}
+  ],
+  "products": [{"sku": "PAN-PASTA-500", "name": "Pasta 500g", "category": "pantry", "unit_cost": 0.95}],
+  "suppliers": [
+    {"id": "SUP-ANDINA", "name": "Andina Distribuciones", "active": true, "fill_rate": 0.97},
+    {"id": "SUP-NORTE", "name": "Mayorista del Norte", "active": true, "fill_rate": 0.88}
+  ],
+  "supplier_items": [
+    {"supplier_id": "SUP-ANDINA", "sku": "PAN-PASTA-500", "unit_price": 0.95, "moq": 120, "case_pack": 24, "lead_time_days": 3, "available_qty": 0},
+    {"supplier_id": "SUP-NORTE", "sku": "PAN-PASTA-500", "unit_price": 1.02, "moq": 240, "case_pack": 24, "lead_time_days": 5, "available_qty": 1000}
+  ],
+  "inventory": [
+    {"node_id": "DS-CHAPINERO", "sku": "PAN-PASTA-500", "on_hand": 400, "capacity": 1000, "last_counted_day": -2},
+    {"node_id": "DS-USAQUEN", "sku": "PAN-PASTA-500", "on_hand": 600, "capacity": 900, "last_counted_day": -2}
+  ],
+  "forecast": [
+    {"node_id": "DS-CHAPINERO", "sku": "PAN-PASTA-500", "units_per_day": 30},
+    {"node_id": "DS-USAQUEN", "sku": "PAN-PASTA-500", "units_per_day": 25}
+  ],
+  "sales": [
+    {"node_id": "DS-CHAPINERO", "sku": "PAN-PASTA-500", "base": 30},
+    {"node_id": "DS-USAQUEN", "sku": "PAN-PASTA-500", "base": 25}
+  ],
+  "budgets": [{"node_id": "DS-CHAPINERO", "category": "pantry", "start_day": -2, "end_day": 27, "amount": 2000, "next_amount": 2000}],
+  "purchase_orders": [
+    {"id": "PO-2101", "node_id": "DS-CHAPINERO", "supplier_id": "SUP-ANDINA", "sku": "PAN-PASTA-500", "qty": 500, "qty_confirmed": 250, "unit_price": 0.95, "status": "partially_confirmed", "order_day": -1, "eta_day": 3}
+  ],
+  "supplier_events": [
+    {"po_id": "PO-2101", "kind": "partial_fill", "message": "Only 250 of 500 units available this cycle. Remaining quantity is not scheduled.", "available": 250}
+  ],
+  "situation": {"id": "SIT-2101", "kind": "supplier_shortfall", "title": "PO-2101: supplier can ship 250 of 500 Pasta 500g", "description": "SUP-ANDINA says it can only supply 250 of the 500 units on PO-2101 (PAN-PASTA-500, DS-CHAPINERO). Decide what should happen next and act on it.", "node_id": "DS-CHAPINERO", "sku": "PAN-PASTA-500", "ref_id": "PO-2101"},
+  "expect": {
+    "verdicts": ["accept", "modify"],
+    "required_tools": ["get_item_snapshot", "get_open_purchase_orders", "get_demand"],
+    "actions_forbidden": ["create_po", "transfer"],
+    "true_daily_demand": 30,
+    "min_cover_days": 10,
+    "max_cover_days": 30,
+    "approval_required": false
+  }
+}

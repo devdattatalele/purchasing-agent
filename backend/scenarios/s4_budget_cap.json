@@ -1,0 +1,34 @@
+{
+  "id": "s4_budget_cap",
+  "title": "S4: the right quantity does not fit the budget",
+  "notes": "Need 14 days (lead 4 + review 7 + safety 3) x 30 = 420 minus 130 on hand = 290. The recommended 360 costs 2160 and 290 costs 1740, but this budget period has 900 left (3000 minus 2100 on PO-4000) and resets on day 6. 900 buys 144 units (12 cases) at ANDINA, covering to day 9 against an 11 day horizon. SUP-NORTE is cheaper per unit but its 240 MOQ costs 1296. Right call: buy what fits now and escalate the gap for a budget exception.",
+  "nodes": [{"id": "DS-CHAPINERO", "name": "Chapinero dark store"}],
+  "products": [{"sku": "PAN-OLIVE-500", "name": "Olive oil 500ml", "category": "pantry", "unit_cost": 6.00}],
+  "suppliers": [
+    {"id": "SUP-ANDINA", "name": "Andina Distribuciones", "active": true, "fill_rate": 0.97},
+    {"id": "SUP-NORTE", "name": "Mayorista del Norte", "active": true, "fill_rate": 0.88}
+  ],
+  "supplier_items": [
+    {"supplier_id": "SUP-ANDINA", "sku": "PAN-OLIVE-500", "unit_price": 6.00, "moq": 60, "case_pack": 12, "lead_time_days": 4, "available_qty": 2000},
+    {"supplier_id": "SUP-NORTE", "sku": "PAN-OLIVE-500", "unit_price": 5.40, "moq": 240, "case_pack": 12, "lead_time_days": 6, "available_qty": 2000}
+  ],
+  "inventory": [{"node_id": "DS-CHAPINERO", "sku": "PAN-OLIVE-500", "on_hand": 130, "capacity": 600, "last_counted_day": -1}],
+  "forecast": [{"node_id": "DS-CHAPINERO", "sku": "PAN-OLIVE-500", "units_per_day": 30}],
+  "sales": [{"node_id": "DS-CHAPINERO", "sku": "PAN-OLIVE-500", "base": 30}],
+  "budgets": [{"node_id": "DS-CHAPINERO", "category": "pantry", "start_day": -9, "end_day": 5, "amount": 3000, "next_amount": 4000}],
+  "purchase_orders": [
+    {"id": "PO-4000", "node_id": "DS-CHAPINERO", "supplier_id": "SUP-ANDINA", "sku": "PAN-OLIVE-500", "qty": 350, "qty_confirmed": 350, "unit_price": 6.00, "status": "received", "order_day": -8, "eta_day": -4}
+  ],
+  "recommendations": [
+    {"id": "REC-4001", "node_id": "DS-CHAPINERO", "sku": "PAN-OLIVE-500", "supplier_id": "SUP-ANDINA", "qty": 360, "source": "replenishment_engine", "reason": "On hand 130 is below the 14 day target of 420. Rounded up to full cases with a buffer."}
+  ],
+  "situation": {"id": "SIT-4001", "kind": "recommendation_review", "title": "Review recommendation REC-4001: buy 360 Olive oil 500ml", "description": "The replenishment engine recommends buying 360 units of PAN-OLIVE-500 for DS-CHAPINERO from SUP-ANDINA (REC-4001). Decide whether to accept, modify, reject or investigate it, and act on the decision.", "node_id": "DS-CHAPINERO", "sku": "PAN-OLIVE-500", "ref_id": "REC-4001"},
+  "expect": {
+    "verdicts": ["modify", "escalate"],
+    "required_tools": ["get_budget", "get_item_snapshot", "get_supplier_options"],
+    "actions_required_any": [["create_po"], ["escalate"]],
+    "po": {"suppliers": ["SUP-ANDINA"], "min_qty": 120, "max_spend": 900},
+    "true_daily_demand": 30,
+    "max_cover_days": 30
+  }
+}

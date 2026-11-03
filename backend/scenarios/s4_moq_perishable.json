@@ -1,0 +1,33 @@
+{
+  "id": "s4_moq_perishable",
+  "title": "S4: supplier MOQ is bigger than shelf life allows",
+  "notes": "Yogurt, 8 day shelf life, 12/day. Need 7 days (lead 2 + review 3 + safety 2) x 12 = 84 minus 20 on hand = 64, so 72 in cases of 12. The recommended ANDINA MOQ of 240 is 20 days of demand: about 140 units expire. SUP-LACTEOS sells 48+ at 18 percent more, which costs about 32 extra instead of about 360 of waste. The premium is above the 15 percent auto limit, so a buyer approves.",
+  "nodes": [{"id": "DS-CHAPINERO", "name": "Chapinero dark store"}],
+  "products": [{"sku": "DAIRY-YOG-1KG", "name": "Natural yogurt 1kg", "category": "dairy", "unit_cost": 2.50, "shelf_life_days": 8, "safety_days": 2, "review_days": 3}],
+  "suppliers": [
+    {"id": "SUP-ANDINA", "name": "Andina Distribuciones", "active": true, "fill_rate": 0.97},
+    {"id": "SUP-LACTEOS", "name": "Lacteos La Sabana", "active": true, "fill_rate": 0.95}
+  ],
+  "supplier_items": [
+    {"supplier_id": "SUP-ANDINA", "sku": "DAIRY-YOG-1KG", "unit_price": 2.50, "moq": 240, "case_pack": 12, "lead_time_days": 2, "available_qty": 2000},
+    {"supplier_id": "SUP-LACTEOS", "sku": "DAIRY-YOG-1KG", "unit_price": 2.95, "moq": 48, "case_pack": 12, "lead_time_days": 2, "available_qty": 400}
+  ],
+  "inventory": [{"node_id": "DS-CHAPINERO", "sku": "DAIRY-YOG-1KG", "on_hand": 20, "capacity": 300, "last_counted_day": -1}],
+  "forecast": [{"node_id": "DS-CHAPINERO", "sku": "DAIRY-YOG-1KG", "units_per_day": 12}],
+  "sales": [{"node_id": "DS-CHAPINERO", "sku": "DAIRY-YOG-1KG", "base": 12}],
+  "budgets": [{"node_id": "DS-CHAPINERO", "category": "dairy", "start_day": -2, "end_day": 27, "amount": 1500, "next_amount": 1500}],
+  "recommendations": [
+    {"id": "REC-4101", "node_id": "DS-CHAPINERO", "sku": "DAIRY-YOG-1KG", "supplier_id": "SUP-ANDINA", "qty": 240, "source": "replenishment_engine", "reason": "On hand 20 is below the 7 day target of 84. Raised to the supplier minimum order quantity of 240."}
+  ],
+  "situation": {"id": "SIT-4101", "kind": "recommendation_review", "title": "Review recommendation REC-4101: buy 240 Natural yogurt 1kg", "description": "The replenishment engine recommends buying 240 units of DAIRY-YOG-1KG for DS-CHAPINERO from SUP-ANDINA (REC-4101). Decide whether to accept, modify, reject or investigate it, and act on the decision.", "node_id": "DS-CHAPINERO", "sku": "DAIRY-YOG-1KG", "ref_id": "REC-4101"},
+  "expect": {
+    "verdicts": ["modify"],
+    "required_tools": ["get_item_snapshot", "get_supplier_options"],
+    "actions_required_any": [["create_po"]],
+    "po": {"suppliers": ["SUP-LACTEOS"], "min_qty": 48, "max_qty": 96},
+    "true_daily_demand": 12,
+    "min_cover_days": 5,
+    "max_cover_days": 10,
+    "approval_required": true
+  }
+}

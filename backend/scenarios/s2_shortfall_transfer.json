@@ -1,0 +1,48 @@
+{
+  "id": "s2_shortfall_transfer",
+  "title": "S2: supplier ships 250 of 500, stock exists in the network",
+  "notes": "Supply = 180 on hand + 250 confirmed = 430, stockout on day 8 at 50/day. Target 13 days (lead 3 + review 7 + safety 3) = 650, so about 220 short. ANDINA has nothing left. DS-USAQUEN holds 700 against its own 13 day need of 260, so 440 can move in 1 day at no purchase cost. SUP-NORTE (+10 percent, lead 5, MOQ 200) also works.",
+  "nodes": [
+    {"id": "DS-CHAPINERO", "name": "Chapinero dark store"},
+    {"id": "DS-USAQUEN", "name": "Usaquen dark store"}
+  ],
+  "products": [{"sku": "PAN-RICE-1KG", "name": "Rice 1kg", "category": "pantry", "unit_cost": 1.40}],
+  "suppliers": [
+    {"id": "SUP-ANDINA", "name": "Andina Distribuciones", "active": true, "fill_rate": 0.97},
+    {"id": "SUP-NORTE", "name": "Mayorista del Norte", "active": true, "fill_rate": 0.88}
+  ],
+  "supplier_items": [
+    {"supplier_id": "SUP-ANDINA", "sku": "PAN-RICE-1KG", "unit_price": 1.40, "moq": 100, "case_pack": 20, "lead_time_days": 3, "available_qty": 0},
+    {"supplier_id": "SUP-NORTE", "sku": "PAN-RICE-1KG", "unit_price": 1.54, "moq": 200, "case_pack": 20, "lead_time_days": 5, "available_qty": 1000}
+  ],
+  "inventory": [
+    {"node_id": "DS-CHAPINERO", "sku": "PAN-RICE-1KG", "on_hand": 180, "capacity": 900, "last_counted_day": -2},
+    {"node_id": "DS-USAQUEN", "sku": "PAN-RICE-1KG", "on_hand": 700, "capacity": 900, "last_counted_day": -2}
+  ],
+  "forecast": [
+    {"node_id": "DS-CHAPINERO", "sku": "PAN-RICE-1KG", "units_per_day": 50},
+    {"node_id": "DS-USAQUEN", "sku": "PAN-RICE-1KG", "units_per_day": 20}
+  ],
+  "sales": [
+    {"node_id": "DS-CHAPINERO", "sku": "PAN-RICE-1KG", "base": 50},
+    {"node_id": "DS-USAQUEN", "sku": "PAN-RICE-1KG", "base": 20}
+  ],
+  "budgets": [{"node_id": "DS-CHAPINERO", "category": "pantry", "start_day": -2, "end_day": 27, "amount": 2000, "next_amount": 2000}],
+  "purchase_orders": [
+    {"id": "PO-2001", "node_id": "DS-CHAPINERO", "supplier_id": "SUP-ANDINA", "sku": "PAN-RICE-1KG", "qty": 500, "qty_confirmed": 250, "unit_price": 1.40, "status": "partially_confirmed", "order_day": -1, "eta_day": 3}
+  ],
+  "supplier_events": [
+    {"po_id": "PO-2001", "kind": "partial_fill", "message": "We can only supply 250 of the 500 units this week because of a mill shortage. The remaining 250 have no confirmed date.", "available": 250}
+  ],
+  "situation": {"id": "SIT-2001", "kind": "supplier_shortfall", "title": "PO-2001: supplier can ship 250 of 500 Rice 1kg", "description": "SUP-ANDINA says it can only supply 250 of the 500 units on PO-2001 (PAN-RICE-1KG, DS-CHAPINERO). Decide what should happen next and act on it.", "node_id": "DS-CHAPINERO", "sku": "PAN-RICE-1KG", "ref_id": "PO-2001"},
+  "expect": {
+    "verdicts": ["modify"],
+    "required_tools": ["get_item_snapshot", "get_open_purchase_orders", "get_demand"],
+    "actions_required_any": [["transfer", "create_po"]],
+    "po": {"suppliers": ["SUP-NORTE"]},
+    "true_daily_demand": 50,
+    "min_cover_days": 10,
+    "max_cover_days": 30,
+    "approval_required": false
+  }
+}

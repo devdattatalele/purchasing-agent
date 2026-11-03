@@ -1,0 +1,26 @@
+[project]
+name = "buyer"
+version = "0.1.0"
+description = "AI purchasing agent that reviews, executes and verifies purchasing decisions"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.32",
+    "psycopg[binary]>=3.2",
+    "litellm>=1.60",
+    "python-dotenv>=1.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["backend/buyer"]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["backend"]

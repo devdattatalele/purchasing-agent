@@ -1,0 +1,37 @@
+{
+  "id": "s3_demand_spike",
+  "title": "S3: sales running 2.5x forecast during a heat wave",
+  "notes": "Forecast 40/day, last 7 days average 101 with a heat wave advisory running to day 13 and no promotion. At 101/day, 280 on hand runs out on day 2 and PO-3001 (400, day 3) lasts 4 more days. Target 13 days at 100/day = 1300 against 680 of supply, so about 620 more; ANDINA lands it on day 3, peak 1024 <= 1400.",
+  "nodes": [{"id": "DS-CHAPINERO", "name": "Chapinero dark store"}],
+  "products": [{"sku": "BEV-ELECTRO-500", "name": "Electrolyte drink 500ml", "category": "beverages", "unit_cost": 1.10}],
+  "suppliers": [
+    {"id": "SUP-ANDINA", "name": "Andina Distribuciones", "active": true, "fill_rate": 0.97},
+    {"id": "SUP-NORTE", "name": "Mayorista del Norte", "active": true, "fill_rate": 0.88}
+  ],
+  "supplier_items": [
+    {"supplier_id": "SUP-ANDINA", "sku": "BEV-ELECTRO-500", "unit_price": 1.10, "moq": 240, "case_pack": 24, "lead_time_days": 3, "available_qty": 3000},
+    {"supplier_id": "SUP-NORTE", "sku": "BEV-ELECTRO-500", "unit_price": 1.02, "moq": 480, "case_pack": 24, "lead_time_days": 6, "available_qty": 3000}
+  ],
+  "inventory": [{"node_id": "DS-CHAPINERO", "sku": "BEV-ELECTRO-500", "on_hand": 280, "capacity": 1400, "last_counted_day": -1}],
+  "forecast": [{"node_id": "DS-CHAPINERO", "sku": "BEV-ELECTRO-500", "units_per_day": 40}],
+  "sales": [{"node_id": "DS-CHAPINERO", "sku": "BEV-ELECTRO-500", "base": 40, "last": [92, 97, 101, 95, 104, 110, 106]}],
+  "signals": [
+    {"node_id": "DS-CHAPINERO", "sku": null, "kind": "weather", "description": "Heat wave advisory for the city, expected to last until 2026-11-16.", "start_day": -8, "end_day": 13}
+  ],
+  "budgets": [{"node_id": "DS-CHAPINERO", "category": "beverages", "start_day": -2, "end_day": 27, "amount": 2500, "next_amount": 2500}],
+  "purchase_orders": [
+    {"id": "PO-3001", "node_id": "DS-CHAPINERO", "supplier_id": "SUP-ANDINA", "sku": "BEV-ELECTRO-500", "qty": 400, "qty_confirmed": 400, "unit_price": 1.10, "status": "confirmed", "order_day": -1, "eta_day": 3}
+  ],
+  "situation": {"id": "SIT-3001", "kind": "demand_shift", "title": "Electrolyte drink 500ml selling 2.5x forecast", "description": "Sales of BEV-ELECTRO-500 at DS-CHAPINERO have been far above forecast for the last week. PO-3001 is open. Investigate whether the purchasing plan needs to change and act on it.", "node_id": "DS-CHAPINERO", "sku": "BEV-ELECTRO-500", "ref_id": "PO-3001"},
+  "expect": {
+    "verdicts": ["modify"],
+    "required_tools": ["get_demand", "get_open_purchase_orders", "get_item_snapshot"],
+    "actions_required_any": [["create_po"]],
+    "po": {"suppliers": ["SUP-ANDINA", "SUP-NORTE"], "min_qty": 400, "max_qty": 960},
+    "min_demand_basis": 80,
+    "true_daily_demand": 100,
+    "min_cover_days": 10,
+    "max_cover_days": 30,
+    "approval_required": false
+  }
+}

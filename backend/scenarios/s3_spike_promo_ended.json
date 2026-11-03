@@ -1,0 +1,31 @@
+{
+  "id": "s3_spike_promo_ended",
+  "title": "S3: spike was a promotion that ended yesterday",
+  "notes": "Last 7 days averaged 86 against a forecast of 30, but a 2 for 1 promotion ran exactly those days and ended yesterday. At 30/day, 300 on hand + PO-3101 200 = 16 days of cover. Extrapolating the spike buys about 600 units that would sit 36 days. Correct: keep the plan.",
+  "nodes": [{"id": "DS-CHAPINERO", "name": "Chapinero dark store"}],
+  "products": [{"sku": "SNK-COOKIE-300", "name": "Chocolate cookies 300g", "category": "snacks", "unit_cost": 1.30}],
+  "suppliers": [{"id": "SUP-ANDINA", "name": "Andina Distribuciones", "active": true, "fill_rate": 0.97}],
+  "supplier_items": [
+    {"supplier_id": "SUP-ANDINA", "sku": "SNK-COOKIE-300", "unit_price": 1.30, "moq": 96, "case_pack": 24, "lead_time_days": 3, "available_qty": 3000}
+  ],
+  "inventory": [{"node_id": "DS-CHAPINERO", "sku": "SNK-COOKIE-300", "on_hand": 300, "capacity": 900, "last_counted_day": -1}],
+  "forecast": [{"node_id": "DS-CHAPINERO", "sku": "SNK-COOKIE-300", "units_per_day": 30}],
+  "sales": [{"node_id": "DS-CHAPINERO", "sku": "SNK-COOKIE-300", "base": 30, "last": [78, 84, 90, 86, 92, 81, 88]}],
+  "signals": [
+    {"node_id": "DS-CHAPINERO", "sku": "SNK-COOKIE-300", "kind": "promotion", "description": "2 for 1 promotion on Chocolate cookies 300g.", "start_day": -7, "end_day": -1}
+  ],
+  "budgets": [{"node_id": "DS-CHAPINERO", "category": "snacks", "start_day": -2, "end_day": 27, "amount": 3000, "next_amount": 3000}],
+  "purchase_orders": [
+    {"id": "PO-3101", "node_id": "DS-CHAPINERO", "supplier_id": "SUP-ANDINA", "sku": "SNK-COOKIE-300", "qty": 200, "qty_confirmed": 200, "unit_price": 1.30, "status": "confirmed", "order_day": -1, "eta_day": 4}
+  ],
+  "situation": {"id": "SIT-3101", "kind": "demand_shift", "title": "Chocolate cookies 300g selling 2.9x forecast", "description": "Sales of SNK-COOKIE-300 at DS-CHAPINERO have been far above forecast for the last week. PO-3101 is open. Investigate whether the purchasing plan needs to change and act on it.", "node_id": "DS-CHAPINERO", "sku": "SNK-COOKIE-300", "ref_id": "PO-3101"},
+  "expect": {
+    "verdicts": ["accept"],
+    "required_tools": ["get_demand", "get_open_purchase_orders"],
+    "actions_forbidden": ["create_po"],
+    "true_daily_demand": 30,
+    "min_cover_days": 10,
+    "max_cover_days": 30,
+    "approval_required": false
+  }
+}

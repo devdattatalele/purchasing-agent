@@ -1,0 +1,33 @@
+{
+  "id": "s1_accept_recommendation",
+  "title": "S1: recommendation is right",
+  "notes": "Target 15 days (lead 3 + review 7 + safety 5) x 70/day = 1050. Need 1050 - 230 = 820, so 800 is within 3 percent. Day 3 peak 20 + 800 = 820 <= 1200. Spend 480 of 2000.",
+  "nodes": [{"id": "DS-CHAPINERO", "name": "Chapinero dark store"}],
+  "products": [{"sku": "SNK-CHIPS-150", "name": "Potato chips 150g", "category": "snacks", "unit_cost": 0.60, "safety_days": 5}],
+  "suppliers": [
+    {"id": "SUP-ANDINA", "name": "Andina Distribuciones", "active": true, "fill_rate": 0.97},
+    {"id": "SUP-NORTE", "name": "Mayorista del Norte", "active": true, "fill_rate": 0.88}
+  ],
+  "supplier_items": [
+    {"supplier_id": "SUP-ANDINA", "sku": "SNK-CHIPS-150", "unit_price": 0.60, "moq": 200, "case_pack": 20, "lead_time_days": 3, "available_qty": 5000},
+    {"supplier_id": "SUP-NORTE", "sku": "SNK-CHIPS-150", "unit_price": 0.58, "moq": 600, "case_pack": 20, "lead_time_days": 7, "available_qty": 5000}
+  ],
+  "inventory": [{"node_id": "DS-CHAPINERO", "sku": "SNK-CHIPS-150", "on_hand": 230, "capacity": 1200, "last_counted_day": -1}],
+  "forecast": [{"node_id": "DS-CHAPINERO", "sku": "SNK-CHIPS-150", "units_per_day": 70}],
+  "sales": [{"node_id": "DS-CHAPINERO", "sku": "SNK-CHIPS-150", "base": 70}],
+  "budgets": [{"node_id": "DS-CHAPINERO", "category": "snacks", "start_day": -2, "end_day": 27, "amount": 2000, "next_amount": 2000}],
+  "recommendations": [
+    {"id": "REC-1101", "node_id": "DS-CHAPINERO", "sku": "SNK-CHIPS-150", "supplier_id": "SUP-ANDINA", "qty": 800, "source": "replenishment_engine", "reason": "On hand 230 is below the 15 day target of 1050 at forecast 70/day."}
+  ],
+  "situation": {"id": "SIT-1101", "kind": "recommendation_review", "title": "Review recommendation REC-1101: buy 800 Potato chips 150g", "description": "The replenishment engine recommends buying 800 units of SNK-CHIPS-150 for DS-CHAPINERO from SUP-ANDINA (REC-1101). Decide whether to accept, modify, reject or investigate it, and act on the decision.", "node_id": "DS-CHAPINERO", "sku": "SNK-CHIPS-150", "ref_id": "REC-1101"},
+  "expect": {
+    "verdicts": ["accept", "modify"],
+    "required_tools": ["get_item_snapshot", "get_open_purchase_orders", "get_budget"],
+    "actions_required_any": [["create_po"]],
+    "po": {"suppliers": ["SUP-ANDINA"], "min_qty": 760, "max_qty": 880},
+    "true_daily_demand": 70,
+    "min_cover_days": 10,
+    "max_cover_days": 30,
+    "approval_required": false
+  }
+}

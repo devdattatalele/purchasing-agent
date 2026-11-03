@@ -1,0 +1,29 @@
+{
+  "id": "s1_reject_overstock",
+  "title": "S1: recommendation would overstock",
+  "notes": "On hand 420 + PO-1201 200 = 620 units = 41 days at 15/day, already past the 30 day cap. 800 more is 94 days and lands on day 5 on top of 345 + 200 (1345 > capacity 700). Budget is not the blocker here.",
+  "nodes": [{"id": "DS-CHAPINERO", "name": "Chapinero dark store"}],
+  "products": [{"sku": "HOME-DET-1L", "name": "Liquid detergent 1L", "category": "household", "unit_cost": 3.20}],
+  "suppliers": [{"id": "SUP-ANDINA", "name": "Andina Distribuciones", "active": true, "fill_rate": 0.97}],
+  "supplier_items": [
+    {"supplier_id": "SUP-ANDINA", "sku": "HOME-DET-1L", "unit_price": 3.20, "moq": 48, "case_pack": 12, "lead_time_days": 5, "available_qty": 2000}
+  ],
+  "inventory": [{"node_id": "DS-CHAPINERO", "sku": "HOME-DET-1L", "on_hand": 420, "capacity": 700, "last_counted_day": -3}],
+  "forecast": [{"node_id": "DS-CHAPINERO", "sku": "HOME-DET-1L", "units_per_day": 15}],
+  "sales": [{"node_id": "DS-CHAPINERO", "sku": "HOME-DET-1L", "base": 15}],
+  "budgets": [{"node_id": "DS-CHAPINERO", "category": "household", "start_day": -2, "end_day": 27, "amount": 5000, "next_amount": 5000}],
+  "purchase_orders": [
+    {"id": "PO-1201", "node_id": "DS-CHAPINERO", "supplier_id": "SUP-ANDINA", "sku": "HOME-DET-1L", "qty": 200, "qty_confirmed": 200, "unit_price": 3.20, "status": "confirmed", "order_day": -1, "eta_day": 5}
+  ],
+  "recommendations": [
+    {"id": "REC-1201", "node_id": "DS-CHAPINERO", "sku": "HOME-DET-1L", "supplier_id": "SUP-ANDINA", "qty": 800, "source": "replenishment_engine", "reason": "Pallet quantity order to reach full pallet pricing."}
+  ],
+  "situation": {"id": "SIT-1201", "kind": "recommendation_review", "title": "Review recommendation REC-1201: buy 800 Liquid detergent 1L", "description": "The replenishment engine recommends buying 800 units of HOME-DET-1L for DS-CHAPINERO from SUP-ANDINA (REC-1201). Decide whether to accept, modify, reject or investigate it, and act on the decision.", "node_id": "DS-CHAPINERO", "sku": "HOME-DET-1L", "ref_id": "REC-1201"},
+  "expect": {
+    "verdicts": ["reject"],
+    "required_tools": ["get_item_snapshot", "get_open_purchase_orders", "get_demand"],
+    "actions_forbidden": ["create_po", "transfer"],
+    "true_daily_demand": 15,
+    "approval_required": false
+  }
+}

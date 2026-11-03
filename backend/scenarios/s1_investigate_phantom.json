@@ -1,0 +1,26 @@
+{
+  "id": "s1_investigate_phantom",
+  "title": "S1: stock record looks wrong",
+  "notes": "System says 310 on hand, but the SKU sold 50/day for weeks and then zero for the last 6 days, and it was last counted 46 days ago. Classic phantom inventory: the shelf is likely empty. Buying 800 on a record nobody trusts is wrong, so is rejecting. Right call: cycle count first, optionally a small hedge.",
+  "nodes": [{"id": "DS-CHAPINERO", "name": "Chapinero dark store"}],
+  "products": [{"sku": "PC-SHAMPOO-400", "name": "Shampoo 400ml", "category": "personal_care", "unit_cost": 2.80}],
+  "suppliers": [{"id": "SUP-ANDINA", "name": "Andina Distribuciones", "active": true, "fill_rate": 0.97}],
+  "supplier_items": [
+    {"supplier_id": "SUP-ANDINA", "sku": "PC-SHAMPOO-400", "unit_price": 2.80, "moq": 120, "case_pack": 12, "lead_time_days": 4, "available_qty": 3000}
+  ],
+  "inventory": [{"node_id": "DS-CHAPINERO", "sku": "PC-SHAMPOO-400", "on_hand": 310, "capacity": 1200, "last_counted_day": -46}],
+  "forecast": [{"node_id": "DS-CHAPINERO", "sku": "PC-SHAMPOO-400", "units_per_day": 50}],
+  "sales": [{"node_id": "DS-CHAPINERO", "sku": "PC-SHAMPOO-400", "base": 50, "last": [0, 0, 0, 0, 0, 0]}],
+  "budgets": [{"node_id": "DS-CHAPINERO", "category": "personal_care", "start_day": -2, "end_day": 27, "amount": 4000, "next_amount": 4000}],
+  "recommendations": [
+    {"id": "REC-1301", "node_id": "DS-CHAPINERO", "sku": "PC-SHAMPOO-400", "supplier_id": "SUP-ANDINA", "qty": 800, "source": "replenishment_engine", "reason": "Order up to 21 days of forecast demand (1050) from on hand stock (310), rounded up."}
+  ],
+  "situation": {"id": "SIT-1301", "kind": "recommendation_review", "title": "Review recommendation REC-1301: buy 800 Shampoo 400ml", "description": "The replenishment engine recommends buying 800 units of PC-SHAMPOO-400 for DS-CHAPINERO from SUP-ANDINA (REC-1301). Decide whether to accept, modify, reject or investigate it, and act on the decision.", "node_id": "DS-CHAPINERO", "sku": "PC-SHAMPOO-400", "ref_id": "REC-1301"},
+  "expect": {
+    "verdicts": ["investigate", "escalate"],
+    "required_tools": ["get_item_snapshot", "get_demand"],
+    "actions_required_any": [["request_cycle_count"]],
+    "po": {"max_qty": 400},
+    "true_daily_demand": 50
+  }
+}

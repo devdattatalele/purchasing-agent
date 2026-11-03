@@ -1,0 +1,50 @@
+{
+  "id": "s2_recovery_stale_quote",
+  "title": "S2: replacement supplier under-delivers too",
+  "notes": "100 on hand + 200 confirmed = 300 units, stockout on day 7 at 40/day; about 220 short of the 13 day target. No network surplus (DS-USAQUEN holds 90 against its own 390 need). SUP-NORTE is the cheap option and its portal quotes 1000, but it really has 72. The first order comes back short, which leaves a gap before day 10. Expected: detect the short confirmation, re-plan to SUP-COSTA (+17.5 percent, so a buyer approves) or escalate.",
+  "nodes": [
+    {"id": "DS-CHAPINERO", "name": "Chapinero dark store"},
+    {"id": "DS-USAQUEN", "name": "Usaquen dark store"}
+  ],
+  "products": [{"sku": "PAN-OIL-1L", "name": "Sunflower oil 1L", "category": "pantry", "unit_cost": 2.40}],
+  "suppliers": [
+    {"id": "SUP-ANDINA", "name": "Andina Distribuciones", "active": true, "fill_rate": 0.97},
+    {"id": "SUP-NORTE", "name": "Mayorista del Norte", "active": true, "fill_rate": 0.88},
+    {"id": "SUP-COSTA", "name": "Costa Foods", "active": true, "fill_rate": 0.93}
+  ],
+  "supplier_items": [
+    {"supplier_id": "SUP-ANDINA", "sku": "PAN-OIL-1L", "unit_price": 2.40, "moq": 120, "case_pack": 12, "lead_time_days": 3, "available_qty": 0},
+    {"supplier_id": "SUP-NORTE", "sku": "PAN-OIL-1L", "unit_price": 2.52, "moq": 120, "case_pack": 12, "lead_time_days": 4, "available_qty": 72, "quoted_qty": 1000},
+    {"supplier_id": "SUP-COSTA", "sku": "PAN-OIL-1L", "unit_price": 2.82, "moq": 60, "case_pack": 12, "lead_time_days": 4, "available_qty": 600}
+  ],
+  "inventory": [
+    {"node_id": "DS-CHAPINERO", "sku": "PAN-OIL-1L", "on_hand": 100, "capacity": 800, "last_counted_day": -2},
+    {"node_id": "DS-USAQUEN", "sku": "PAN-OIL-1L", "on_hand": 90, "capacity": 600, "last_counted_day": -2}
+  ],
+  "forecast": [
+    {"node_id": "DS-CHAPINERO", "sku": "PAN-OIL-1L", "units_per_day": 40},
+    {"node_id": "DS-USAQUEN", "sku": "PAN-OIL-1L", "units_per_day": 30}
+  ],
+  "sales": [
+    {"node_id": "DS-CHAPINERO", "sku": "PAN-OIL-1L", "base": 40},
+    {"node_id": "DS-USAQUEN", "sku": "PAN-OIL-1L", "base": 30}
+  ],
+  "budgets": [{"node_id": "DS-CHAPINERO", "category": "pantry", "start_day": -2, "end_day": 27, "amount": 3000, "next_amount": 3000}],
+  "purchase_orders": [
+    {"id": "PO-2201", "node_id": "DS-CHAPINERO", "supplier_id": "SUP-ANDINA", "sku": "PAN-OIL-1L", "qty": 480, "qty_confirmed": 200, "unit_price": 2.40, "status": "partially_confirmed", "order_day": -1, "eta_day": 2}
+  ],
+  "supplier_events": [
+    {"po_id": "PO-2201", "kind": "partial_fill", "message": "Only 200 of 480 units can be supplied. No date for the rest.", "available": 200}
+  ],
+  "situation": {"id": "SIT-2201", "kind": "supplier_shortfall", "title": "PO-2201: supplier can ship 200 of 480 Sunflower oil 1L", "description": "SUP-ANDINA says it can only supply 200 of the 480 units on PO-2201 (PAN-OIL-1L, DS-CHAPINERO). Decide what should happen next and act on it.", "node_id": "DS-CHAPINERO", "sku": "PAN-OIL-1L", "ref_id": "PO-2201"},
+  "expect": {
+    "verdicts": ["modify", "escalate"],
+    "required_tools": ["get_item_snapshot", "get_open_purchase_orders", "get_supplier_options", "get_network_stock"],
+    "actions_required_any": [["create_po", "escalate"]],
+    "po": {"suppliers": ["SUP-NORTE", "SUP-COSTA"]},
+    "true_daily_demand": 40,
+    "min_cover_days": 10,
+    "max_cover_days": 30,
+    "cover_or_escalate": true
+  }
+}
