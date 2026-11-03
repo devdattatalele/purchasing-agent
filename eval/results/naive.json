@@ -1,0 +1,461 @@
+{
+  "mode": "naive",
+  "results": [
+    {
+      "scenario": "s1_accept_recommendation",
+      "title": "S1: recommendation is right",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "accept (want accept/modify)"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_budget, get_item_snapshot, get_open_purchase_orders"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took ['create_po']"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": false,
+      "seconds": 0.1
+    },
+    {
+      "scenario": "s1_investigate_phantom",
+      "title": "S1: stock record looks wrong",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": false,
+          "detail": "accept (want investigate/escalate)"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_demand, get_item_snapshot"
+        },
+        "constraints": {
+          "pass": false,
+          "detail": "PO-5001 breaks MOQ/case pack"
+        },
+        "action": {
+          "pass": false,
+          "detail": "needed one of ['request_cycle_count']; ordered 800, want 0 to 400"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": false,
+      "seconds": 0.1
+    },
+    {
+      "scenario": "s1_modify_open_po",
+      "title": "S1: recommendation ignores an open PO",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": false,
+          "detail": "accept (want modify)"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_budget, get_item_snapshot, get_open_purchase_orders, get_supplier_options"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": false,
+          "detail": "needed one of ['create_po']; did not mention PO-1001"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": false,
+      "seconds": 0.1
+    },
+    {
+      "scenario": "s1_reject_overstock",
+      "title": "S1: recommendation would overstock",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": false,
+          "detail": "accept (want reject)"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders"
+        },
+        "constraints": {
+          "pass": false,
+          "detail": "storage peak 1345 > 700; PO-5001 breaks MOQ/case pack"
+        },
+        "action": {
+          "pass": false,
+          "detail": "took forbidden create_po"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": false,
+      "seconds": 0.1
+    },
+    {
+      "scenario": "s2_recovery_stale_quote",
+      "title": "S2: replacement supplier under-delivers too",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": false,
+          "detail": "accept (want modify/escalate)"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_item_snapshot, get_network_stock, get_open_purchase_orders, get_supplier_options"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": false,
+          "detail": "final cover 7d < 10d at true demand 40"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": false,
+      "seconds": 0.1
+    },
+    {
+      "scenario": "s2_shortfall_sufficient",
+      "title": "S2: supplier ships 250 of 500, stock is still enough",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "accept (want accept/modify)"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": false,
+          "detail": "took forbidden create_po"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": false,
+      "seconds": 0.2
+    },
+    {
+      "scenario": "s2_shortfall_transfer",
+      "title": "S2: supplier ships 250 of 500, stock exists in the network",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": false,
+          "detail": "accept (want modify)"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": false,
+          "detail": "final cover 8d < 10d at true demand 50"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": false,
+      "seconds": 0.1
+    },
+    {
+      "scenario": "s3_demand_spike",
+      "title": "S3: sales running 2.5x forecast during a heat wave",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": false,
+          "detail": "accept (want modify)"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": false,
+          "detail": "needed one of ['create_po']; demand basis 40.0 < 80; final cover 7d < 10d at true demand 100"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": false,
+      "seconds": 0.1
+    },
+    {
+      "scenario": "s3_spike_promo_ended",
+      "title": "S3: spike was a promotion that ended yesterday",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "accept (want accept)"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_demand, get_open_purchase_orders"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took no action"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": false,
+      "seconds": 0.1
+    },
+    {
+      "scenario": "s4_budget_cap",
+      "title": "S4: the right quantity does not fit the budget",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": false,
+          "detail": "accept (want modify/escalate)"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_budget, get_item_snapshot, get_supplier_options"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": false,
+          "detail": "needed one of ['create_po']; needed one of ['escalate']"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": false,
+      "seconds": 0.1
+    },
+    {
+      "scenario": "s4_budget_race",
+      "title": "S4: another buyer spends the budget between check and commit",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": true,
+          "detail": "not graded"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_budget, get_open_purchase_orders"
+        },
+        "constraints": {
+          "pass": true,
+          "detail": "budget, storage, MOQ, shelf life ok"
+        },
+        "action": {
+          "pass": true,
+          "detail": "took no action"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation (one was expected)"
+        }
+      },
+      "pass": false,
+      "seconds": 0.1
+    },
+    {
+      "scenario": "s4_moq_perishable",
+      "title": "S4: supplier MOQ is bigger than shelf life allows",
+      "run_id": 1,
+      "status": "completed",
+      "verdict": "accept",
+      "summary": "Executed upstream instruction.",
+      "tokens": 0,
+      "tools": [],
+      "checks": {
+        "decision": {
+          "pass": false,
+          "detail": "accept (want modify)"
+        },
+        "evidence": {
+          "pass": false,
+          "detail": "missing get_item_snapshot, get_supplier_options"
+        },
+        "constraints": {
+          "pass": false,
+          "detail": "about 144 units expire"
+        },
+        "action": {
+          "pass": false,
+          "detail": "supplier ['SUP-ANDINA'] not in ['SUP-LACTEOS']; ordered 240, want 48 to 96; final cover 22d > 10d; approval not asked, want asked"
+        },
+        "validated": {
+          "pass": false,
+          "detail": "0 verification(s), run completed"
+        },
+        "recovery": {
+          "pass": true,
+          "detail": "n/a, no deviation"
+        }
+      },
+      "pass": false,
+      "seconds": 0.1
+    }
+  ]
+}
