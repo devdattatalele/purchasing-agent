@@ -14,27 +14,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "accept (want accept/modify)"
+          "detail": "accept (want accept/modify)",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_budget, get_item_snapshot, get_open_purchase_orders"
+          "detail": "missing get_budget, get_item_snapshot, get_open_purchase_orders",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took ['create_po']"
+          "detail": "took ['create_po']",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": false,
@@ -53,27 +59,33 @@
       "checks": {
         "decision": {
           "pass": false,
-          "detail": "accept (want investigate/escalate)"
+          "detail": "accept (want investigate/escalate)",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_demand, get_item_snapshot"
+          "detail": "missing get_demand, get_item_snapshot",
+          "na": false
         },
         "constraints": {
           "pass": false,
-          "detail": "ordered 800 from SUP-ANDINA, breaks MOQ 120/case 12"
+          "detail": "ordered 800 from SUP-ANDINA, breaks MOQ 120/case 12",
+          "na": false
         },
         "action": {
           "pass": false,
-          "detail": "needed one of ['request_cycle_count']; ordered 800, want 0 to 400"
+          "detail": "needed one of ['request_cycle_count']; ordered 800, want 0 to 400",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": false,
@@ -92,27 +104,33 @@
       "checks": {
         "decision": {
           "pass": false,
-          "detail": "accept (want modify)"
+          "detail": "accept (want modify)",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_budget, get_item_snapshot, get_open_purchase_orders, get_supplier_options"
+          "detail": "missing get_budget, get_item_snapshot, get_open_purchase_orders, get_supplier_options",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": false,
-          "detail": "needed one of ['create_po']; did not mention PO-1001"
+          "detail": "needed one of ['create_po']; did not mention PO-1001",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": false,
@@ -131,27 +149,33 @@
       "checks": {
         "decision": {
           "pass": false,
-          "detail": "accept (want reject)"
+          "detail": "accept (want reject)",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders"
+          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders",
+          "na": false
         },
         "constraints": {
           "pass": false,
-          "detail": "storage peak 1345 > 700; ordered 800 from SUP-ANDINA, breaks MOQ 48/case 12"
+          "detail": "storage peak 1345 > 700; ordered 800 from SUP-ANDINA, breaks MOQ 48/case 12",
+          "na": false
         },
         "action": {
           "pass": false,
-          "detail": "took forbidden create_po"
+          "detail": "took forbidden create_po",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": false,
@@ -170,27 +194,33 @@
       "checks": {
         "decision": {
           "pass": false,
-          "detail": "accept (want modify/escalate)"
+          "detail": "accept (want modify/escalate)",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_item_snapshot, get_network_stock, get_open_purchase_orders, get_supplier_options"
+          "detail": "missing get_item_snapshot, get_network_stock, get_open_purchase_orders, get_supplier_options",
+          "na": false
         },
         "constraints": {
           "pass": false,
-          "detail": "ordered 280 from SUP-ANDINA, breaks MOQ 120/case 12"
+          "detail": "ordered 280 from SUP-ANDINA, breaks MOQ 120/case 12",
+          "na": false
         },
         "action": {
           "pass": false,
-          "detail": "final cover 7d < 10d at true demand 40"
+          "detail": "final cover 7d < 10d at true demand 40",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": false,
@@ -209,27 +239,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "accept (want accept/modify)"
+          "detail": "accept (want accept/modify)",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders"
+          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders",
+          "na": false
         },
         "constraints": {
           "pass": false,
-          "detail": "ordered 250 from SUP-ANDINA, breaks MOQ 120/case 24"
+          "detail": "ordered 250 from SUP-ANDINA, breaks MOQ 120/case 24",
+          "na": false
         },
         "action": {
           "pass": false,
-          "detail": "took forbidden create_po"
+          "detail": "took forbidden create_po",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": false,
@@ -248,27 +284,33 @@
       "checks": {
         "decision": {
           "pass": false,
-          "detail": "accept (want modify)"
+          "detail": "accept (want modify)",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders"
+          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders",
+          "na": false
         },
         "constraints": {
           "pass": false,
-          "detail": "ordered 250 from SUP-ANDINA, breaks MOQ 100/case 20"
+          "detail": "ordered 250 from SUP-ANDINA, breaks MOQ 100/case 20",
+          "na": false
         },
         "action": {
           "pass": false,
-          "detail": "final cover 8d < 10d at true demand 50"
+          "detail": "final cover 8d < 10d at true demand 50",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": false,
@@ -287,27 +329,33 @@
       "checks": {
         "decision": {
           "pass": false,
-          "detail": "accept (want modify)"
+          "detail": "accept (want modify)",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders"
+          "detail": "missing get_demand, get_item_snapshot, get_open_purchase_orders",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": false,
-          "detail": "needed one of ['create_po']; demand basis 40.0 < 80; final cover 7d < 10d at true demand 100"
+          "detail": "needed one of ['create_po']; demand basis 40.0 < 80; final cover 7d < 10d at true demand 100",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": false,
@@ -326,27 +374,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "accept (want accept)"
+          "detail": "accept (want accept)",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_demand, get_open_purchase_orders"
+          "detail": "missing get_demand, get_open_purchase_orders",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took no action"
+          "detail": "took no action",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": false,
@@ -365,27 +419,33 @@
       "checks": {
         "decision": {
           "pass": false,
-          "detail": "accept (want modify/escalate)"
+          "detail": "accept (want modify/escalate)",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_budget, get_item_snapshot, get_supplier_options"
+          "detail": "missing get_budget, get_item_snapshot, get_supplier_options",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": false,
-          "detail": "needed one of ['create_po']; needed one of ['escalate']"
+          "detail": "needed one of ['create_po']; needed one of ['escalate']",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": false,
@@ -404,27 +464,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "not graded"
+          "detail": "not graded",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_budget, get_open_purchase_orders"
+          "detail": "missing get_budget, get_open_purchase_orders",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took no action"
+          "detail": "took no action",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation (one was expected)"
+          "detail": "no deviation (one was expected)",
+          "na": true
         }
       },
       "pass": false,
@@ -443,27 +509,33 @@
       "checks": {
         "decision": {
           "pass": false,
-          "detail": "accept (want modify)"
+          "detail": "accept (want modify)",
+          "na": false
         },
         "evidence": {
           "pass": false,
-          "detail": "missing get_item_snapshot, get_supplier_options"
+          "detail": "missing get_item_snapshot, get_supplier_options",
+          "na": false
         },
         "constraints": {
           "pass": false,
-          "detail": "about 144 units expire"
+          "detail": "about 144 units expire",
+          "na": false
         },
         "action": {
           "pass": false,
-          "detail": "supplier ['SUP-ANDINA'] not in ['SUP-LACTEOS']; ordered 240, want 48 to 96; final cover 22d > 10d; approval not asked, want asked"
+          "detail": "supplier ['SUP-ANDINA'] not in ['SUP-LACTEOS']; ordered 240, want 48 to 96; final cover 22d > 10d; approval not asked, want asked",
+          "na": false
         },
         "validated": {
           "pass": false,
-          "detail": "0 verification(s), run completed"
+          "detail": "0 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": false,

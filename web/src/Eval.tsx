@@ -21,7 +21,8 @@ function Board({ title, data }: { title: string; data: any }) {
                 <td>{r.verdict ?? "n/a"}</td>
                 {CHECKS.map((c) => (
                   <td key={c} title={r.checks[c].detail}>
-                    <span className={`chip ${r.checks[c].pass ? "ok" : "bad"}`}>{r.checks[c].pass ? "pass" : "fail"}</span>
+                    {r.checks[c].na ? <span className="chip">n/a</span>
+                      : <span className={`chip ${r.checks[c].pass ? "ok" : "bad"}`}>{r.checks[c].pass ? "pass" : "fail"}</span>}
                   </td>
                 ))}
                 <td className="r">{r.tokens}</td>
@@ -29,7 +30,10 @@ function Board({ title, data }: { title: string; data: any }) {
             ))}
             <tr>
               <td colSpan={2} className="muted">pass rate</td>
-              {CHECKS.map((c) => <td key={c} className="num">{rs.filter((r: any) => r.checks[c].pass).length}/{rs.length}</td>)}
+              {CHECKS.map((c) => {
+                const applies = rs.filter((r: any) => !r.checks[c].na);
+                return <td key={c} className="num">{applies.length ? `${applies.filter((r: any) => r.checks[c].pass).length}/${applies.length}` : "n/a"}</td>;
+              })}
               <td />
             </tr>
           </tbody>

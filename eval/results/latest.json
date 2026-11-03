@@ -23,27 +23,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "accept (want accept/modify)"
+          "detail": "accept (want accept/modify)",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took ['create_po']"
+          "detail": "took ['create_po']",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "1 verification(s), run completed"
+          "detail": "1 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": true,
@@ -71,27 +77,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "investigate (want investigate/escalate)"
+          "detail": "investigate (want investigate/escalate)",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took ['request_cycle_count']"
+          "detail": "took ['request_cycle_count']",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "1 verification(s), run completed"
+          "detail": "1 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": true,
@@ -119,27 +131,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "modify (want modify)"
+          "detail": "modify (want modify)",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took ['create_po']"
+          "detail": "took ['create_po']",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "1 verification(s), run completed"
+          "detail": "1 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": true,
@@ -167,27 +185,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "reject (want reject)"
+          "detail": "reject (want reject)",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took no action"
+          "detail": "took no action",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "1 verification(s), run completed"
+          "detail": "1 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": true,
@@ -215,27 +239,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "modify (want modify/escalate)"
+          "detail": "modify (want modify/escalate)",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took ['amend_po', 'create_po']"
+          "detail": "took ['amend_po', 'create_po']",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "2 verification(s), run completed"
+          "detail": "2 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "1 deviation(s): SUP-NORTE confirmed only 72 of 228 on PO-5001."
+          "detail": "1 deviation(s): SUP-NORTE confirmed only 72 of 228 on PO-5001.",
+          "na": false
         }
       },
       "pass": true,
@@ -263,27 +293,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "modify (want accept/modify)"
+          "detail": "modify (want accept/modify)",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took ['amend_po']"
+          "detail": "took ['amend_po']",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "1 verification(s), run completed"
+          "detail": "1 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": true,
@@ -311,27 +347,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "modify (want modify)"
+          "detail": "modify (want modify)",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took ['amend_po', 'transfer']"
+          "detail": "took ['amend_po', 'transfer']",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "1 verification(s), run completed"
+          "detail": "1 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": true,
@@ -359,27 +401,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "modify (want modify)"
+          "detail": "modify (want modify)",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took ['create_po']"
+          "detail": "took ['create_po']",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "1 verification(s), run completed"
+          "detail": "1 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": true,
@@ -407,27 +455,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "accept (want accept)"
+          "detail": "accept (want accept)",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took no action"
+          "detail": "took no action",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "1 verification(s), run completed"
+          "detail": "1 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": true,
@@ -455,27 +509,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "modify (want modify/escalate)"
+          "detail": "modify (want modify/escalate)",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took ['create_po', 'escalate']"
+          "detail": "took ['create_po', 'escalate']",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "1 verification(s), run escalated"
+          "detail": "1 verification(s), run escalated",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": true,
@@ -503,27 +563,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "not graded"
+          "detail": "not graded",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took ['escalate']"
+          "detail": "took ['escalate']",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "2 verification(s), run escalated"
+          "detail": "2 verification(s), run escalated",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "1 deviation(s): create_po failed: budget exceeded on DS-CHAPINERO/beverages: committed 958.00, this PO 403.20, budget 1060.00"
+          "detail": "1 deviation(s): create_po failed: budget exceeded on DS-CHAPINERO/beverages: committed 958.00, this PO 403.20, budget 1060.00",
+          "na": false
         }
       },
       "pass": true,
@@ -551,27 +617,33 @@
       "checks": {
         "decision": {
           "pass": true,
-          "detail": "modify (want modify)"
+          "detail": "modify (want modify)",
+          "na": false
         },
         "evidence": {
           "pass": true,
-          "detail": "8 tools used"
+          "detail": "8 tools used",
+          "na": false
         },
         "constraints": {
           "pass": true,
-          "detail": "budget, storage, MOQ, shelf life ok"
+          "detail": "budget, storage, MOQ, shelf life ok",
+          "na": false
         },
         "action": {
           "pass": true,
-          "detail": "took ['create_po']"
+          "detail": "took ['create_po']",
+          "na": false
         },
         "validated": {
           "pass": true,
-          "detail": "1 verification(s), run completed"
+          "detail": "1 verification(s), run completed",
+          "na": false
         },
         "recovery": {
           "pass": true,
-          "detail": "n/a, no deviation"
+          "detail": "no deviation",
+          "na": true
         }
       },
       "pass": true,

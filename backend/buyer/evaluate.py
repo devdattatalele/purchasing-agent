@@ -34,8 +34,12 @@ def run_scenario(sid: str, mode: str) -> int:
     return run_id
 
 
-def verdict(ok: bool, detail: str = "") -> dict:
-    return {"pass": ok, "detail": detail}
+def verdict(ok: bool, detail: str = "", na: bool = False) -> dict:
+    return {"pass": ok, "detail": detail, "na": na}
+
+
+def label(check: dict) -> str:
+    return "n/a" if check.get("na") else "pass" if check["pass"] else "FAIL"
 
 
 def grade(sc: dict, run_id: int) -> dict:
@@ -119,7 +123,8 @@ def grade(sc: dict, run_id: int) -> dict:
 
     deviated = [s for s in checks if not s["payload"]["ok"]]
     if not deviated:
-        out["recovery"] = verdict(True, "n/a, no deviation" + (" (one was expected)" if exp.get("expects_deviation") else ""))
+        out["recovery"] = verdict(True, "no deviation" + (" (one was expected)" if exp.get("expects_deviation") else ""),
+                                  na=True)
     else:
         handled = run["status"] == "escalated" or checks[-1]["payload"]["ok"]
         out["recovery"] = verdict(handled, f"{len(deviated)} deviation(s): {deviated[0]['payload']['deviations'][0]}")
@@ -137,16 +142,19 @@ def scorecard(results: list[dict], mode: str) -> str:
              "|---|---|" + "---|" * len(CHECKS) + "---|"]
     for r in results:
         lines.append(f"| {r['scenario']} | {r['verdict']} | "
-                     + " | ".join(mark[r["checks"][c]["pass"]] for c in CHECKS) + f" | {mark[r['pass']]} |")
-    lines += ["", "## Per check pass rate", ""]
+                     + " | ".join(label(r["checks"][c]) for c in CHECKS) + f" | {mark[r['pass']]} |")
+    lines += ["", "## Per check pass rate (over runs where the check applies)", ""]
     for c in CHECKS:
-        lines.append(f"- {c}: {sum(r['checks'][c]['pass'] for r in results)}/{len(results)}")
+        applies = [r for r in results if not r["checks"][c].get("na")]
+        skipped = len(results) - len(applies)
+        lines.append(f"- {c}: {sum(r['checks'][c]['pass'] for r in applies)}/{len(applies)}"
+                     + (f" ({skipped} n/a)" if skipped else ""))
     lines += ["", "## Details", ""]
     for r in results:
         lines.append(f"**{r['scenario']}** ({r['status']}, {r['tokens']} tokens): {r['summary']}"
                      + (f" Error: {r['error']}" if r.get("error") else ""))
         for c in CHECKS:
-            lines.append(f"- {c}: {mark[r['checks'][c]['pass']]}, {r['checks'][c]['detail']}")
+            lines.append(f"- {c}: {label(r['checks'][c])}, {r['checks'][c]['detail']}")
         lines.append("")
     return "\n".join(lines)
 
